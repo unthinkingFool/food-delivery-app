@@ -1,0 +1,88 @@
+CREATE TABLE customer (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    hashed_password TEXT NOT NULL,
+    address_id INT NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE location (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    road VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE restaurant (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    hashed_password TEXT NOT NULL,
+    contact_no VARCHAR(20) NOT NULL,
+    location_id INT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    rating NUMERIC, 
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE rider (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    hashed_password TEXT NOT NULL,
+    current_location VARCHAR(255),
+    contact_no VARCHAR(20) NOT NULL,
+    income NUMERIC,
+    rating NUMERIC
+);
+
+CREATE TABLE item (
+    id SERIAL PRIMARY KEY,
+    restaurant_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    price NUMERIC NOT NULL,
+    discount_price NUMERIC,
+    total_sold INT,
+    rating NUMERIC,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    restaurant_id INT NOT NULL,
+    rider_id INT NOT NULL,
+    requirement TEXT,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP
+);
+
+CREATE TABLE order_item (
+    id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL,
+    item_id INT NOT NULL,
+    quantity INT NOT NULL
+);
+
+CREATE TABLE review (
+    id SERIAL PRIMARY KEY,
+    item_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating SMALLINT NOT NULL,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE payment (
+    id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL,
+    payment_type VARCHAR(100) NOT NULL,
+    method VARCHAR(100) NOT NULL,
+    transaction_id VARCHAR(255) NOT NULL,
+    paid_at TIMESTAMP
+);
