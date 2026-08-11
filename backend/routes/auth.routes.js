@@ -1,52 +1,16 @@
-import express from "express";
+import express  from "express"
+import { signin, signout, signup } from "../controllers/auth.controllers.js"
+import { forgotPassword, resetPassword, verifyOTP } from "../controllers/forget.controllers.js"
 
-import {
-  register,
-  login,
-  logout,
-  forgotPassword,
-  verifyOTP,
-  resetPassword
-} from "../controllers/auth.controller.js";
+const authRouter=express.Router()
 
-const AuthRouter = express.Router();
-
-// ============================================================
-// REGISTER
-// ============================================================
-// POST /api/auth/register/customer
-// POST /api/auth/register/restaurant
-// POST /api/auth/register/rider
-AuthRouter.post("/register/:role", register);
-
-// ============================================================
-// LOGIN
-// ============================================================
-// POST /api/auth/login/customer
-// POST /api/auth/login/restaurant
-// POST /api/auth/login/rider
-AuthRouter.post("/login/:role", login);
-
-// ============================================================
-// LOGOUT
-// ============================================================
-// POST /api/auth/logout
-AuthRouter.post("/logout", logout);
-
-//=============================================================
-// Forget Password
-//=============================================================
-AuthRouter.post("/forgot-password/:role", forgotPassword);
-
-// ============================================================
-// verify otp
-// ============================================================
-AuthRouter.post("/verify-otp/:role", verifyOTP);
-
-// ============================================================
-// Reset Password
-// =============================================================
-AuthRouter.post("/reset-password/:role", resetPassword);
+authRouter.post("/signup",signup)
+authRouter.post("/signin",signin)
+authRouter.get("/signout",signout)
 
 
-export default AuthRouter;
+authRouter.post("/send-otp",forgotPassword)
+authRouter.post("/verify-otp",verifyOTP)
+authRouter.post("/reset-password",resetPassword)
+
+export default authRouter;

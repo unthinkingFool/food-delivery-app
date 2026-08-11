@@ -1,21 +1,16 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import {useSelector} from 'react-redux'
+import UserDashboard from "../components/UserDashboard";
+import OwnerDashboard from "../components/OwnerDashboard";
+import RiderDashboard from "../components/RiderDashboard";
 
-import Customer from "../components/Customer";
-import Restaurant from "../components/Restaurant";
-import Rider from "../components/Rider";
-
-function Home () {
-  const { user, loading, isAuthenticated } = useSelector((state) => state.user);
-  return (
-        <div>
-            {user?.role=="customer" && <Customer/>}
-            {user?.role=="restaurant" && <Restaurant/>}
-            {user?.role=="rider" && <Rider/>}
-        </div>
-      
-   
-  );
-};
+function Home() {
+  const {userData}= useSelector(state=>state.user)
+  return <div>
+    {userData.role=="customer" && <UserDashboard/>}
+    {userData.role=="owner" && <OwnerDashboard/>}
+    {userData.role=="rider" && <RiderDashboard/>}
+  </div>;
+}
 
 export default Home;

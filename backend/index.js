@@ -1,36 +1,28 @@
 import express from "express";
 import dotenv from "dotenv";
-import { connectDB } from "./config/db.js";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import AuthRouter from "./routes/auth.routes.js";
-import UserRouter from "./routes/user.routes.js";
-import transporter from "./config/mail.js";
-
 dotenv.config();
+import cors from "cors";
+import { connectDB } from "./config/db.js";
+import authRouter from "./routes/auth.routes.js";
+import cookieParser from "cookie-parser";
+import userRouter from "./routes/user.routes.js";
 
 const app = express();
 
+const port = process.env.BACKEND_PORT || 5000;
+
+app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   }),
 );
-app.use(express.json());
-app.use(cookieParser());
-app.use("/api/auth", AuthRouter);
-app.use("/api/user", UserRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
-app.listen(3000, () => {
+app.listen(port, () => {
   connectDB();
-  console.log("backend server is running at post 3000");
-
-  transporter.verify((error, success) => {
-    if (error) {
-      console.error("Email configuration failed:", error);
-    } else {
-      console.log("Email server is ready");
-    }
-  });
+  console.log(`server started at port ${port}`);
 });

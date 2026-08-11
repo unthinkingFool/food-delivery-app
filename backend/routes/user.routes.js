@@ -1,39 +1,12 @@
-import express from "express";
-import isAuth from "../middleware/isAuth.js";
-import { getCurrentUser } from "../controllers/user.controller.js";
+import express  from "express"
+import { getCurrentUser } from "../controllers/user.controllers.js";
+import { isAuth } from "../middlewares/isAuth.js";
 
-const UserRouter = express.Router();
-
-
-// Get currently logged-in user
-UserRouter.get(
-    "/me",
-    isAuth,
-    async (req, res) => {
-
-        try {
-
-            res.status(200).json({
-                success: true,
-                user: req.user
-            });
-
-        } catch (error) {
-
-            console.error(
-                "Get current user error:",
-                error
-            );
-
-            res.status(500).json({
-                success: false,
-                message: "Failed to get current user"
-            });
-
-        }
-
-    }
-);
+const userRouter=express.Router()
 
 
-export default UserRouter;
+userRouter.get("/current",isAuth,getCurrentUser)
+
+
+
+export default userRouter;

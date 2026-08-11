@@ -1,70 +1,28 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React from 'react'
+import {Navigate, Route, Routes} from 'react-router-dom' 
 
-// Pages
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ForgetPassword from "./pages/ForgetPassword";
-import VerifyOTP from "./pages/VerifyOTP";
-import ResetPassword from "./pages/ResetPassword";
+import SignUp from './pages/signup'
+import SignIn from './pages/signin'
+import ForgotPassword from './pages/ForgotPassword'
+import useGetCurrentUser from './hooks/useGetCurrentUser'
+import { useSelector } from 'react-redux'
+import Home from './pages/Home'
+import useGetCity from './hooks/useGetCity'
 
-
-// Hook
-import getCurrentUser from "../hooks/getCurrentUser";
+export const serverUrl="http://localhost:3000"
 
 function App() {
-  // Check authentication when app starts
-  getCurrentUser();
-
-  // Get authentication state from Redux
-  const { user, loading, isAuthenticated } = useSelector((state) => state.user);
-
-  
-
+  useGetCurrentUser();
+  useGetCity();
+  const {userData}=useSelector(state=>state.user)
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* ================= HOME ================= */}
-
-        <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" replace />}
-        />
-
-        {/* ================= AUTH ================= */}
-
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/" replace />}
-        />
-
-        <Route
-          path="/register"
-          element={!user ? <Register /> : <Navigate to="/" replace />}
-        />
-
-        <Route
-          path="/forget-password"
-          element={!user ? <ForgetPassword /> : <Navigate to="/" replace />}
-        />
-
-        <Route
-          path="/verify-otp"
-          element={!user ? <VerifyOTP /> : <Navigate to="/" replace />}
-        />
-
-        <Route
-          path="/reset-password"
-          element={!user ? <ResetPassword /> : <Navigate to="/" replace />}
-        />
-
-        {/* ================= UNKNOWN ROUTE ================= */}
-
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    <Routes>
+      <Route path='/' element={userData?<Home/>:<Navigate to={"/signin"}/>}/>
+      <Route path='/signup' element={!userData?<SignUp/>:<Navigate to={"/"}/>}/>
+      <Route path='/signin' element={!userData?<SignIn/>:<Navigate to={"/"}/>}/>
+      <Route path='/forgot-password' element={!userData?<ForgotPassword/>:<Navigate to={"/"}/>}/>
+    </Routes>
+  )
 }
 
-export default App;
+export default App

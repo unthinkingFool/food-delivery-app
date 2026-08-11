@@ -68,14 +68,18 @@ CREATE TABLE ADMIN (
 CREATE TABLE RESTAURANT (
     id              SERIAL PRIMARY KEY,
     isApproved      BOOLEAN NOT NULL DEFAULT FALSE,
+    status          restaurant_status_enum NOT NULL DEFAULT 'notApproved',
     name            VARCHAR(255) NOT NULL,
+    image_link       VARCHAR(500),
+    description     TEXT,
     address         VARCHAR(255),
+    city            VARCHAR(100) NOT NULL,
     email           VARCHAR(255) NOT NULL UNIQUE,
     hashed_password VARCHAR(255) NOT NULL,
     contact_no      VARCHAR(50),
-    status          restaurant_status_enum NOT NULL DEFAULT 'notApproved',
     rating          NUMERIC(3,2),
     created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     CHECK (rating IS NULL OR rating BETWEEN 0 AND 5)
 );
 
@@ -114,12 +118,13 @@ CREATE TABLE CUSTOMER (
 -- ============================================================
 CREATE TABLE ITEM (
     id              SERIAL PRIMARY KEY,
-    restaurant_id   INTEGER NOT NULL REFERENCES RESTAURANT(id),
+    restaurant_id   INTEGER NOT NULL REFERENCES RESTAURANT(id) ON DELETE CASCADE,
     name            VARCHAR(255) NOT NULL,
     type            item_type_enum,
     description     VARCHAR(500),
     price           NUMERIC(10,2) NOT NULL,
     discount_price  NUMERIC(10,2),
+    image_link       VARCHAR(500),
     total_sold      INTEGER DEFAULT 0,
     rating          NUMERIC(3,2),
     created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -205,4 +210,19 @@ CREATE TABLE PASSWORD_RESET (
     verified BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     CHECK (role IN ('customer', 'restaurant', 'rider'))
+);
+
+--=============================================================
+-- Notification
+-- ============================================================
+CREATE TABLE NOTIFICATION (
+    id SERIAL PRIMARY KEY,
+    recipient_role VARCHAR(20) NOT NULL,
+    recipient_id INTEGER NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message VARCHAR(500) NOT NULL,
+    reference_id INTEGER,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
