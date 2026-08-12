@@ -6,6 +6,8 @@ import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.routes.js";
+import shopRouter from "./routes/restaurant.routes.js";
+import itemRouter from "./routes/item.routes.js";
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.use(
 );
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/restaurant",shopRouter)
+app.use("/api/item",itemRouter)
 
 app.listen(port, () => {
   connectDB();

@@ -47,7 +47,8 @@ CREATE TYPE order_status_enum AS ENUM (
 );
 
 -- ITEM.type — dietary/menu category
-CREATE TYPE item_type_enum AS ENUM ('burger', 'pizza', 'drink','fries');
+CREATE TYPE item_category_enum AS ENUM ('burger', 'pizza', 'drink','fries');
+CREATE TYPE food_type_enum AS ENUM ('veg','non-veg');
 
 -- PAYMENT.payment_provider — who processed the payment
 CREATE TYPE payment_provider_enum AS ENUM (
@@ -74,22 +75,20 @@ CREATE TABLE ADMIN (
 -- ============================================================
 CREATE TABLE RESTAURANT (
     id              SERIAL PRIMARY KEY,
-    is_approved      BOOLEAN NOT NULL DEFAULT FALSE,
+    owner_id        INTEGER NOT NULL REFERENCES CUSTOMER(id),
+    is_approved     BOOLEAN NOT NULL DEFAULT FALSE,
     status          restaurant_status_enum NOT NULL DEFAULT 'closed',
     name            VARCHAR(255) NOT NULL,
     image_link      VARCHAR(500),
-	description     TEXT,
+    description     TEXT,
     address         VARCHAR(255),
     city            VARCHAR(100) NOT NULL,
-    email           VARCHAR(255) NOT NULL UNIQUE,
-    hashed_password VARCHAR(255) NOT NULL,
     contact_no      VARCHAR(50),
     rating          NUMERIC(3,2),
     created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CHECK (rating IS NULL OR rating BETWEEN 0 AND 5)
 );
-
 
 -- ============================================================
 -- RIDER
@@ -129,7 +128,8 @@ CREATE TABLE ITEM (
     id              SERIAL PRIMARY KEY,
     restaurant_id   INTEGER NOT NULL REFERENCES RESTAURANT(id) ON DELETE CASCADE,
     name            VARCHAR(255) NOT NULL,
-    type            item_type_enum,
+    category        item_category_enum,
+    food_type       food_type_enum,
     description     VARCHAR(500),
     price           NUMERIC(10,2) NOT NULL,
     discount_price  NUMERIC(10,2),
