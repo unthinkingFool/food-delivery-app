@@ -222,7 +222,8 @@ export const getItemsByCity = async (req, res) => {
       `SELECT
         ITEM.*,
         RESTAURANT.name AS restaurant_name,
-        RESTAURANT.city AS restaurant_city
+        RESTAURANT.city AS restaurant_city,
+        RESTAURANT.id AS restaurant_id
        FROM ITEM
        INNER JOIN RESTAURANT
          ON ITEM.restaurant_id = RESTAURANT.id

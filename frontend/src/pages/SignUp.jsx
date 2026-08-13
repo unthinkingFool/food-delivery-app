@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import {
   Eye,
@@ -15,7 +16,6 @@ import {
   Bike,
 } from "lucide-react";
 import { serverUrl } from "../App";
-import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
 
 const ROLES = [
@@ -28,12 +28,11 @@ function SignUp() {
   const [showpassword, setshowpassword] = useState(false);
   const [role, setrole] = useState("customer");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [contact_no, setcontact_no] = useState("");
-
-  const dispatch = useDispatch();
 
   // UI-only additions (do not affect the request itself)
   const [loading, setloading] = useState(false);
@@ -54,13 +53,13 @@ function SignUp() {
         },
         { withCredentials: true },
       );
-
+      console.log(result);
       dispatch(setUserData(result.data));
+      navigate("/");
     } catch (error) {
       console.log("error while signing up frontend : ", error);
       seterror(
-        error?.response?.data?.message ||
-          "Couldn't create your account. Please try again.",
+        error?.response?.data?.message || "Couldn't create your account. Please try again.",
       );
     } finally {
       setloading(false);
@@ -85,8 +84,7 @@ function SignUp() {
             in under a minute.
           </h2>
           <p className="text-white/70 text-lg">
-            Whether you're ordering, cooking, or delivering — KhaiDai has a seat
-            for you.
+            Whether you're ordering, cooking, or delivering — KhaiDai has a seat for you.
           </p>
         </div>
       </div>
@@ -101,9 +99,7 @@ function SignUp() {
             <span className="text-xl font-bold text-[#1F2023]">KhaiDai</span>
           </div>
 
-          <h1 className="text-2xl font-bold text-[#1F2023]">
-            Create your account
-          </h1>
+          <h1 className="text-2xl font-bold text-[#1F2023]">Create your account</h1>
           <p className="text-sm text-gray-500 mt-1 mb-6">
             Create your account to get the best food
           </p>
@@ -117,10 +113,7 @@ function SignUp() {
           <div className="space-y-4">
             {/* name */}
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-[#1F2023] mb-1.5"
-              >
+              <label htmlFor="name" className="block text-sm font-medium text-[#1F2023] mb-1.5">
                 Name
               </label>
               <div className="relative">
@@ -138,10 +131,7 @@ function SignUp() {
 
             {/* email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-[#1F2023] mb-1.5"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-[#1F2023] mb-1.5">
                 Email
               </label>
               <div className="relative">
@@ -159,10 +149,7 @@ function SignUp() {
 
             {/* contact_no */}
             <div>
-              <label
-                htmlFor="mobile"
-                className="block text-sm font-medium text-[#1F2023] mb-1.5"
-              >
+              <label htmlFor="mobile" className="block text-sm font-medium text-[#1F2023] mb-1.5">
                 Contact No
               </label>
               <div className="relative">
@@ -180,10 +167,7 @@ function SignUp() {
 
             {/* password */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-[#1F2023] mb-1.5"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-[#1F2023] mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -203,20 +187,14 @@ function SignUp() {
                   }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-[#FF5A36] transition-colors cursor-pointer"
                 >
-                  {showpassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showpassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
             {/* role */}
             <div>
-              <label className="block text-sm font-medium text-[#1F2023] mb-1.5">
-                Role
-              </label>
+              <label className="block text-sm font-medium text-[#1F2023] mb-1.5">Role</label>
               <div className="grid grid-cols-3 gap-2">
                 {ROLES.map(({ value, label, icon: Icon }) => (
                   <button
@@ -234,9 +212,7 @@ function SignUp() {
                   </button>
                 ))}
               </div>
-              <p className="mt-1.5 text-xs text-gray-400">
-                Selected role: {role}
-              </p>
+              <p className="mt-1.5 text-xs text-gray-400">Selected role: {role}</p>
             </div>
           </div>
 

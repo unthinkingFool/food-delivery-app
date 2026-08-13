@@ -1,10 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { Star, Flame, Minus, Plus, ShoppingCart, Leaf } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../redux/userSlice";
 
 function FoodCard({ data }) {
   const [quantity, setquantity] = useState(0);
-
+  const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.user);
   const handleIncrease = () => {
     const newQuantity = quantity + 1;
     setquantity(newQuantity);
@@ -34,12 +37,18 @@ function FoodCard({ data }) {
           <Leaf className="h-3 w-3" />
           {isVeg ? "veg" : "non-veg"}
         </div>
-        <img src={data.image_link} alt={data.name} className="h-full w-full object-cover" />
+        <img
+          src={data.image_link}
+          alt={data.name}
+          className="h-full w-full object-cover"
+        />
       </div>
 
       {/* details */}
       <div className="p-3.5">
-        <h1 className="text-sm font-bold text-[#1F2023] truncate">{data.name}</h1>
+        <h1 className="text-sm font-bold text-[#1F2023] truncate">
+          {data.name}
+        </h1>
         <h2 className="text-xs text-gray-500 mt-0.5 line-clamp-2 min-h-[2rem]">
           {data.description}
         </h2>
@@ -58,10 +67,14 @@ function FoodCard({ data }) {
         <div className="flex items-baseline gap-2 mt-2">
           <h1 className="text-base font-bold text-[#1F2023]">৳{data.price}</h1>
           {data.discount_price && (
-            <h2 className="text-xs text-gray-400 line-through">৳{data.discount_price}</h2>
+            <h2 className="text-xs text-gray-400 line-through">
+              ৳{data.discount_price}
+            </h2>
           )}
         </div>
-        <h2 className="text-[11px] text-gray-400 mt-0.5 truncate">{data.restaurant_name}</h2>
+        <h2 className="text-[11px] text-gray-400 mt-0.5 truncate">
+          {data.restaurant_name}
+        </h2>
 
         {/* quantity stepper */}
         <div className="flex items-center justify-between mt-3 rounded-lg border border-gray-200 px-2 py-1.5">
@@ -72,7 +85,9 @@ function FoodCard({ data }) {
           >
             <Minus className="h-3.5 w-3.5" />
           </button>
-          <h1 className="text-sm font-semibold text-[#1F2023] w-6 text-center">{quantity}</h1>
+          <h1 className="text-sm font-semibold text-[#1F2023] w-6 text-center">
+            {quantity}
+          </h1>
           <button
             onClick={handleIncrease}
             aria-label="add more"
@@ -84,7 +99,25 @@ function FoodCard({ data }) {
 
         {/* add to cart */}
         <div className="mt-2">
-          <button className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#FF5A36] py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#e94e2c] active:scale-[0.99] cursor-pointer">
+          <button
+            onClick={() => {
+              quantity > 0
+                ? dispatch(
+                    addToCart({
+                      id: data.id,
+                      name: data.name,
+                      price: data.price,
+                      image: data.image_link,
+                      restaurant: data.restaurant_name,
+                      restaurant_id: data.restaurant_id,
+                      quantity,
+                      food_type: data.food_type,
+                    }),
+                  )
+                : null;
+            }}
+            className={`${cartItems.some((i) => i.id == data.id) ? "bg-gray-800" : "bg-[#FF5A36]"} w-full flex items-center justify-center gap-1.5 rounded-lg  py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-[#e94e2c] active:scale-[0.99] cursor-pointer`}
+          >
             <ShoppingCart className="h-3.5 w-3.5" />
             Add to cart
           </button>

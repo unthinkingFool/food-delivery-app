@@ -14,6 +14,8 @@ import AddItem from "./pages/AddItem";
 import EditItem from "./pages/EditItem";
 import useGetRestaurantByCity from "./hooks/useGetRestaurantByCity";
 import useGetItemsByCity from "./hooks/useGetItemsByCity";
+import CartPage from "./pages/CartPage";
+import CheckOut from "./pages/CheckOut";
 
 export const serverUrl = "http://localhost:3000";
 
@@ -55,6 +57,14 @@ function App() {
       <Route
         path="/edit-item/:itemId"
         element={userData ? <EditItem /> : <Navigate to="/signin" />}
+      />
+      <Route
+        path="/cart"
+        element={userData ? <CartPage /> : <Navigate to="/signin" />}
+      />
+      <Route
+        path="/checkout"
+        element={userData ? <CheckOut /> : <Navigate to="/signin" />}
       />
     </Routes>
   );

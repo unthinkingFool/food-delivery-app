@@ -156,30 +156,45 @@ CREATE TABLE LOCATION (
 
 -- ============================================================
 -- FOOD_ORDER
--- (CUSTOMER "places", RESTAURANT "receives", RIDER "delivers")
 -- ============================================================
 CREATE TABLE FOOD_ORDER (
-    id              SERIAL PRIMARY KEY,
-    customer_id     INTEGER NOT NULL REFERENCES CUSTOMER(id),
-    restaurant_id   INTEGER NOT NULL REFERENCES RESTAURANT(id),
-    rider_id        INTEGER REFERENCES RIDER(id),
-    total_price     INTEGER NOT NULL,
-    requirement     VARCHAR(500),
-    status          order_status_enum NOT NULL DEFAULT 'pending',
-    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CHECK (total_price >= 0)
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER NOT NULL REFERENCES CUSTOMER(id),
+    payment_method payment_method_enum NOT NULL,
+    delivery_address TEXT NOT NULL,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- ===========================================================
+-- SHOP_ORDER
+-- ===========================================================
+CREATE TABLE SHOP_ORDER (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL REFERENCES FOOD_ORDER(id) ON DELETE CASCADE,
+    restaurant_id INTEGER NOT NULL REFERENCES RESTAURANT(id),
+    owner_id INTEGER NOT NULL REFERENCES CUSTOMER(id),
+    subtotal DECIMAL(10, 2) NOT NULL,
+    assigned_rider_id INTEGER REFERENCES RIDER(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ============================================================
 -- ORDER_ITEM
--- (FOOD_ORDER "contains", ITEM "included in")
 -- ============================================================
 CREATE TABLE ORDER_ITEM (
-    id              SERIAL PRIMARY KEY,
-    order_id        INTEGER NOT NULL REFERENCES FOOD_ORDER(id),
-    item_id         INTEGER NOT NULL REFERENCES ITEM(id),
-    quantity        INTEGER NOT NULL,
-    CHECK (quantity > 0)
+    id SERIAL PRIMARY KEY,
+    shop_order_id INTEGER NOT NULL REFERENCES SHOP_ORDER(id) ON DELETE CASCADE,
+    item_id INTEGER NOT NULL REFERENCES ITEM(id),
+    restaurant_id INTEGER NOT NULL REFERENCES RESTAURANT(id),
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ============================================================

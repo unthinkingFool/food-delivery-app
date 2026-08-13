@@ -21,6 +21,7 @@ function Nav() {
   const { restaurantData } = useSelector((state) => state.owner);
   const [showinfo, setshowinfo] = useState(false);
   const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.user);
 
   // UI-only addition (does not affect the request itself)
   const [signingout, setsigningout] = useState(false);
@@ -47,7 +48,9 @@ function Nav() {
           <div className="h-8 w-8 rounded-lg bg-[#FF5A36] flex items-center justify-center">
             <UtensilsCrossed className="h-4 w-4 text-white" />
           </div>
-          <h1 className="text-lg font-bold text-[#1F2023] hidden sm:block">KhaiDai</h1>
+          <h1 className="text-lg font-bold text-[#1F2023] hidden sm:block">
+            KhaiDai
+          </h1>
         </div>
 
         {/** search only for customer */}
@@ -90,11 +93,11 @@ function Nav() {
 
           {/** cart item for customer */}
           {userData.role == "customer" && (
-            <div className="relative flex items-center justify-center h-10 w-10 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+            <div className="relative flex items-center justify-center h-10 w-10 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={()=>{navigate("/cart")}}>
               <p className="sr-only">cart</p>
               <ShoppingCart className="h-5 w-5 text-[#1F2023]" />
               <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-[#FF5A36] text-white text-[10px] font-bold flex items-center justify-center">
-                0
+                {cartItems.length}
               </span>
             </div>
           )}

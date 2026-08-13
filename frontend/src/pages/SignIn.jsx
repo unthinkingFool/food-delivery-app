@@ -1,27 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  UtensilsCrossed,
-  Loader2,
-} from "lucide-react";
-import { serverUrl } from "../App";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import { Eye, EyeOff, Mail, Lock, UtensilsCrossed, Loader2 } from "lucide-react";
+import { serverUrl } from "../App";
 import { setUserData } from "../redux/userSlice";
 
 function SignIn() {
   const [showpassword, setshowpassword] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-
-  const dispatch = useDispatch();
 
   // UI-only additions (do not affect the request itself)
   const [loading, setloading] = useState(false);
@@ -39,12 +31,13 @@ function SignIn() {
         },
         { withCredentials: true },
       );
+      console.log(result);
       dispatch(setUserData(result.data));
+      navigate("/");
     } catch (error) {
       console.log("error while signing in frontend : ", error);
       seterror(
-        error?.response?.data?.message ||
-          "Couldn't sign you in. Check your details and try again.",
+        error?.response?.data?.message || "Couldn't sign you in. Check your details and try again.",
       );
     } finally {
       setloading(false);
@@ -69,8 +62,7 @@ function SignIn() {
             delivered fast.
           </h2>
           <p className="text-white/70 text-lg">
-            Sign in to pick up right where you left off — your favorite spots
-            are waiting.
+            Sign in to pick up right where you left off — your favorite spots are waiting.
           </p>
         </div>
       </div>
@@ -99,10 +91,7 @@ function SignIn() {
           <div className="space-y-4">
             {/* email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-[#1F2023] mb-1.5"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-[#1F2023] mb-1.5">
                 Email
               </label>
               <div className="relative">
@@ -120,10 +109,7 @@ function SignIn() {
 
             {/* password */}
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-[#1F2023] mb-1.5"
-              >
+              <label htmlFor="password" className="block text-sm font-medium text-[#1F2023] mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -143,11 +129,7 @@ function SignIn() {
                   }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-[#FF5A36] transition-colors cursor-pointer"
                 >
-                  {showpassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showpassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
