@@ -1,53 +1,43 @@
 import { MapPin, Package, Store, User, Phone, Mail } from "lucide-react";
 import React from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setMyOrders } from "../redux/userSlice";
+
 import { serverUrl } from "../App";
+import { useDispatch } from "react-redux";
+import { updateorderStatus as updateOrderStatusRedux } from "../redux/userSlice";
 function OwnerOrders({ orders = [] }) {
   // ==========================================
   // EMPTY STATE
   // ==========================================
-  const dispatch=useDispatch()
-  const updateOrderStatus = async (shopOrderId, status) => {
-  try {
-    const result = await axios.patch(
-      `${serverUrl}/api/order/shop-order/status`,
-      {
-        shop_order_id: shopOrderId,
-        status,
-      },
-      {
-        withCredentials: true,
-      },
-    );
+  const dispatch = useDispatch();
+  const handleOrderStatusUpdate = async (shopOrderId, status) => {
+    try {
+      const result = await axios.patch(
+        `${serverUrl}/api/order/shop-order/status`,
+        {
+          shop_order_id: shopOrderId,
+          status,
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
-    const updatedShopOrder = result.data.shopOrder;
+      dispatch(
+        updateOrderStatusRedux({
+          shopOrderId,
+          status: result.data.shopOrder.status,
+        }),
+      );
 
-    const updatedOrders = orders.map((order) => ({
-      ...order,
-
-      shopOrders: order.shopOrders.map((shopOrder) =>
-        shopOrder.id === shopOrderId
-          ? {
-              ...shopOrder,
-              status: updatedShopOrder.status,
-              updated_at: updatedShopOrder.updated_at,
-            }
-          : shopOrder,
-      ),
-    }));
-
-    dispatch(setMyOrders(updatedOrders));
-
-    console.log("STATUS UPDATED:", result.data);
-  } catch (error) {
-    console.log(
-      "STATUS UPDATE ERROR:",
-      error.response?.data || error.message,
-    );
-  }
-};
+      console.log("STATUS UPDATED:", result.data);
+    } catch (error) {
+      console.log(
+        "STATUS UPDATE ERROR:",
+        error.response?.data || error.message,
+      );
+    }
+  };
 
   if (!Array.isArray(orders) || orders.length === 0) {
     return (
@@ -241,7 +231,7 @@ function OwnerOrders({ orders = [] }) {
                       <select
                         value={shopOrder.status || "pending"}
                         onChange={(e) =>
-                          updateOrderStatus(shopOrder.id, e.target.value)
+                          handleOrderStatusUpdate(shopOrder.id, e.target.value)
                         }
                         className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium outline-none focus:border-[#FF5A36]"
                       >
@@ -254,8 +244,6 @@ function OwnerOrders({ orders = [] }) {
                         <option value="out_for_delivery">
                           Out for Delivery
                         </option>
-
-                        <option value="delivered">Delivered</option>
 
                         <option value="cancelled">Cancelled</option>
                       </select>

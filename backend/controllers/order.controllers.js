@@ -357,9 +357,7 @@ export const getOrders = async (req, res) => {
         // FOOD ORDER
         // ========================================================
 
-        let order = orders.find(
-          (order) => order.id === row.order_id
-        );
+        let order = orders.find((order) => order.id === row.order_id);
 
         if (!order) {
           order = {
@@ -387,7 +385,7 @@ export const getOrders = async (req, res) => {
         // ========================================================
 
         let shopOrder = order.shopOrders.find(
-          (shop) => shop.id === row.shop_order_id
+          (shop) => shop.id === row.shop_order_id,
         );
 
         if (!shopOrder) {
@@ -434,8 +432,7 @@ export const getOrders = async (req, res) => {
           price: row.item_price,
           quantity: row.quantity,
 
-          item_total:
-            Number(row.item_price) * Number(row.quantity),
+          item_total: Number(row.item_price) * Number(row.quantity),
         });
       }
 
@@ -528,9 +525,7 @@ export const getOrders = async (req, res) => {
         // FOOD ORDER
         // ========================================================
 
-        let order = orders.find(
-          (order) => order.id === row.order_id
-        );
+        let order = orders.find((order) => order.id === row.order_id);
 
         if (!order) {
           order = {
@@ -565,7 +560,7 @@ export const getOrders = async (req, res) => {
         // ========================================================
 
         let shopOrder = order.shopOrders.find(
-          (shop) => shop.id === row.shop_order_id
+          (shop) => shop.id === row.shop_order_id,
         );
 
         if (!shopOrder) {
@@ -614,8 +609,7 @@ export const getOrders = async (req, res) => {
           price: row.item_price,
           quantity: row.quantity,
 
-          item_total:
-            Number(row.item_price) * Number(row.quantity),
+          item_total: Number(row.item_price) * Number(row.quantity),
         });
       }
 
@@ -652,6 +646,13 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
+    // Owner-only endpoint
+    if (req.role !== "owner") {
+      return res.status(403).json({
+        message: "Only restaurant owners can update shop order status",
+      });
+    }
+
     const validStatuses = [
       "pending",
       "confirmed",
@@ -664,6 +665,13 @@ export const updateOrderStatus = async (req, res) => {
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         message: "Invalid order status",
+      });
+    }
+
+    // Owner cannot mark order as delivered
+    if (status === "delivered") {
+      return res.status(403).json({
+        message: "Owner cannot mark an order as delivered",
       });
     }
 

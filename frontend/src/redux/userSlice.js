@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -11,7 +10,7 @@ const userSlice = createSlice({
     itemsInMyCity: [],
     cartItems: [],
     totalAmount: 0,
-    myOrders:[],
+    myOrders: [],
   },
   reducers: {
     setUserData: (state, action) => {
@@ -68,9 +67,27 @@ const userSlice = createSlice({
       state.cartItems = [];
       state.totalAmount = 0;
     },
-    setMyOrders: (state,action)=>{
-      state.myOrders=action.payload
-    }
+    setMyOrders: (state, action) => {
+      state.myOrders = action.payload;
+    },
+    addMyOrder: (state, action) => {
+      state.myOrders = [action.payload, ...state.myOrders];
+    },
+    updateorderStatus: (state, action) => {
+      const { shopOrderId, status } = action.payload;
+
+      for (const order of state.myOrders) {
+        const shopOrder = order.shopOrders?.find(
+          (shop) => shop.id === shopOrderId,
+        );
+
+        if (shopOrder) {
+          shopOrder.status = status;
+          shopOrder.updated_at = new Date().toISOString();
+          break;
+        }
+      }
+    },
   },
 });
 
@@ -84,6 +101,8 @@ export const {
   updateQuantity,
   deleteCartItem,
   clearCart,
-  setMyOrders
+  setMyOrders,
+  addMyOrder,
+  updateorderStatus
 } = userSlice.actions;
 export default userSlice.reducer;

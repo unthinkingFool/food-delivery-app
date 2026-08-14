@@ -17,7 +17,7 @@ import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { serverUrl } from "../App";
-import { clearCart } from "../redux/userSlice";
+import { addMyOrder, clearCart } from "../redux/userSlice";
 import { setaddress, setLocation } from "../redux/mapSlice";
 
 // ==========================================
@@ -131,7 +131,7 @@ function CheckoutPage() {
       );
 
       // Order successfully created
-      console.log("ORDER CREATED:", result.data);
+      dispatch(addMyOrder(result.data))
 
       navigate("/order-placed", {
         replace: true,
