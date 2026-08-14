@@ -104,7 +104,7 @@ function Nav() {
 
           {/** My orders for customers */}
           {userData.role == "customer" && (
-            <button className="hidden sm:block text-sm font-medium text-[#1F2023] px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+            <button className="hidden sm:block text-sm font-medium text-[#1F2023] px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={()=>{navigate("/my-orders")}}>
               My Orders
             </button>
           )}
@@ -118,6 +118,13 @@ function Nav() {
                 0
               </span>
             </div>
+          )}
+
+          {/** My orders for owner */}
+          {userData.role == "owner" && (
+            <button className="hidden sm:block text-sm font-medium text-[#1F2023] px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" onClick={()=>{navigate("/my-orders")}}>
+              My Orders
+            </button>
           )}
 
           {/* avatar */}

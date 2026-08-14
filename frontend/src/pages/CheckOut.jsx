@@ -130,19 +130,13 @@ function CheckoutPage() {
         },
       );
 
+      // Order successfully created
       console.log("ORDER CREATED:", result.data);
 
-      // ==========================================
-      // CLEAR CART
-      // ==========================================
-
-      dispatch(clearCart());
-
-      // ==========================================
-      // GO HOME
-      // ==========================================
-
-      navigate("/");
+      navigate("/order-placed", {
+        replace: true,
+        state: { orderPlaced: true },
+      });
     } catch (error) {
       console.error("Error while creating order:", error);
 

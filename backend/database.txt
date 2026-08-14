@@ -180,6 +180,7 @@ CREATE TABLE SHOP_ORDER (
     owner_id INTEGER NOT NULL REFERENCES CUSTOMER(id),
     subtotal DECIMAL(10, 2) NOT NULL,
     assigned_rider_id INTEGER REFERENCES RIDER(id),
+    status order_status_enum NOT NULL DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
