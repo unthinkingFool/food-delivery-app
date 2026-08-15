@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Package, Store } from "lucide-react";
+import { MapPin, Package, Store,Truck } from "lucide-react";
 
 function CustomerOrders({ orders = [] }) {
   if (!orders.length) {
@@ -152,8 +152,18 @@ function CustomerOrders({ orders = [] }) {
                     </div>
                   ))}
                 </div>
-                <div>
-                  <button>Track Order</button>
+                <div className="mt-3">
+                  <button
+                    disabled={!shopOrder.assigned_rider_id}
+                    className={`w-full flex items-center justify-center gap-1.5 rounded-lg border py-2 text-xs font-semibold transition active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed disabled:active:scale-100 ${
+                      shopOrder.assigned_rider_id
+                        ? "border-[#FF5A36] text-[#FF5A36] hover:bg-[#FF5A36] hover:text-white"
+                        : "border-gray-200 text-gray-400 bg-gray-50"
+                    }`}
+                  >
+                    <Truck className="h-3.5 w-3.5" />
+                    Track Order
+                  </button>
                 </div>
               </div>
             ))}
